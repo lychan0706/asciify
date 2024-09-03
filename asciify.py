@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt5.QtGui import QDragEnterEvent, QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QCheckBox, QSpinBox
 import asciify_methods
@@ -68,7 +69,8 @@ class mainApp(QWidget):
         else:
             image_name = self.path.split("/")[-1].rsplit(".", maxsplit = 1)[0]
             image_name = screen.createTextFile(f"{image_name}")
-            self.completed_label.setText(f"Image is saved as {image_name}")
+            current_dir = os.getcwd()
+            self.completed_label.setText(f'image saved at {current_dir}, \nas {image_name}')
 
     def contUpdate(self):
         self.contrast_factor = int(self.contDspinbox.value())

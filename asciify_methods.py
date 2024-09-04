@@ -33,9 +33,9 @@ def getMeanOfSquare(matrix: list[list[int]], start: tuple[int], xRadius: int, yR
 
     return int(round(mean, 0))
 
-def changeRes(matrix: list[list[int]], newxRes: int):
+def changeRes(matrix: list[list[int]], newWidth: int):
     xold, yold = getResolution(matrix)
-    xnew = newxRes
+    xnew = newWidth
     ynew = int(round(xnew / xold * yold, 0))
     xadder, yadder = fr(xold, xnew), fr(yold, ynew)
     xrad, yrad = ceil(round(xadder, 0)/2), ceil(round(yadder, 0)/2)
@@ -194,24 +194,23 @@ class Screen:
                 for t in range(factor):
                     matrix[y][x] = f(matrix[y][x])
 
-    def createTextFile(self, file_name: str) -> str:
-        '''
-        write a new .txt file on current folder
-        content of the file will be a finished ascii art
-        '''
-
+    def createTextFile(self, file_name: str, path_dl: str = ".\\") -> str:
+    #def createTextFile(self, file_name: str) -> str:
         file_num = 0
         saved = False
 
+        #path_dl = ".\\"
+
         while not saved:
             new_file_name = f'{file_name}-{file_num}.txt'
+            path_file = f'{path_dl}\\{new_file_name}'
             try:
-                txt_file = open(new_file_name,'x')
+                txt_file = open(path_file,'x')
             except:
                 file_num += 1
             else:
                 txt_file.close()
-                txt_file = open(new_file_name, 'w')
+                txt_file = open(path_file, 'w')
                 txt_file.write(str(self))
                 saved = True
                 txt_file.close()
@@ -223,9 +222,9 @@ class Screen:
         path = self.createTextFile(file_name)
         os.system(path)
 
-def convertImageToAsciiArt(path: str, newxRes: int, contrast_factor: int = 0, reverse: bool = False, ascii_char_list: list[str] = [' ']) -> Screen | None:
+def convertImageToAsciiArt(path_img: str, newWidth: int = 200, contrast_factor: int = 0, reverse: bool = False, ascii_char_list: list[str] = [' ']) -> Screen | None:
     
-    image = cv2.imread(path, 0) # 0 : IMREAD_GRAYSCALE
+    image = cv2.imread(path_img, 0) # 0 : IMREAD_GRAYSCALE
 
     image_matrix = list(image)
     for y in range(len(image_matrix)):
@@ -237,8 +236,8 @@ def convertImageToAsciiArt(path: str, newxRes: int, contrast_factor: int = 0, re
 
     oldxRes = getResolution(image_matrix)[0]
 
-    if newxRes != oldxRes:
-        changeRes(temp, newxRes = newxRes)
+    if newWidth != oldxRes:
+        changeRes(temp, newWidth = newWidth)
     grayImageToAsciiImage(temp, ascii_char_list)
     ascii_image_matrix = temp
 
@@ -263,5 +262,5 @@ if __name__ == '__main__':
     newxRes = 300
     contrast_factor = 1
 
-    screen = convertImageToAsciiArt(path = path, newxRes= newxRes, contrast_factor = contrast_factor, ascii_char_list = ascii_char_list_2)
+    screen = convertImageToAsciiArt(path_img = path, newWidth= newxRes, contrast_factor = contrast_factor, ascii_char_list = ascii_char_list_2)
     screen.createTextFileAndRun('my_art')
